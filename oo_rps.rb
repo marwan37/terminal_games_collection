@@ -75,75 +75,78 @@ class Score
   end
 end
 
-class Move
-  attr_accessor :wins_against, :move
+module Moves
+  class Move
+    attr_accessor :wins_against, :move
 
-  def >(other)
-    @wins_against.include?(other.move)
-  end
+    def >(other)
+      @wins_against.include?(other.move)
+    end
 
-  def to_s
-    @move
-  end
+    def to_s
+      @move
+    end
 
-  def style(other)
-    @wins_against.each_with_index do |move, i|
-      return @style[i] if other.move == move
+    def style(other)
+      @wins_against.each_with_index do |move, i|
+        return @style[i] if other.move == move
+      end
+    end
+
+    def beats
+      @wins_against
+    end
+
+    def phrase(other)
+      @move.capitalize + style(other)
     end
   end
 
-  def beats
-    @wins_against
+  class Rock < Move
+    def initialize
+      @style = [' smashes Scissors.', ' smashes Lizard.']
+      @wins_against = ['scissors', 'lizard']
+      @move = 'rock'
+    end
   end
 
-  def phrase(other)
-    @move.capitalize + style(other)
+  class Paper < Move
+    def initialize
+      @style = [' covers Rock.', ' disproves Spock.']
+      @wins_against = ['rock', 'spock']
+      @move = 'paper'
+    end
   end
-end
 
-class Rock < Move
-  def initialize
-    @style = [' smashes Scissors.', ' smashes Lizard.']
-    @wins_against = ['scissors', 'lizard']
-    @move = 'rock'
+  class Scissors < Move
+    def initialize
+      @style = [' decapitates Lizard.', ' cuts Paper.']
+      @wins_against = ['lizard', 'paper']
+      @move = 'scissors'
+    end
   end
-end
 
-class Paper < Move
-  def initialize
-    @style = [' covers Rock.', ' disproves Spock.']
-    @wins_against = ['rock', 'spock']
-    @move = 'paper'
+  class Spock < Move
+    def initialize
+      @style = [' vaporizes Rock.', ' smashes Scissors.']
+      @wins_against = ['rock', 'scissors']
+      @move = 'spock'
+    end
   end
-end
 
-class Scissors < Move
-  def initialize
-    @style = [' decapitates Lizard.', ' cuts Paper.']
-    @wins_against = ['lizard', 'paper']
-    @move = 'scissors'
-  end
-end
-
-class Spock < Move
-  def initialize
-    @style = [' vaporizes Rock.', ' smashes Scissors.']
-    @wins_against = ['rock', 'scissors']
-    @move = 'spock'
-  end
-end
-
-class Lizard < Move
-  def initialize
-    @style = [' poisons Spock.', ' eats Paper.']
-    @wins_against = ['spock', 'paper']
-    @move = 'lizard'
+  class Lizard < Move
+    def initialize
+      @style = [' poisons Spock.', ' eats Paper.']
+      @wins_against = ['spock', 'paper']
+      @move = 'lizard'
+    end
   end
 end
 
 class Player
-  VALUES = { 'rock' => Rock.new, 'paper' => Paper.new, 'spock' => Spock.new,
-             'scissors' => Scissors.new, 'lizard' => Lizard.new }
+  VALUES = { 'rock' => Moves::Rock.new, 'paper' => Moves::Paper.new,
+             'spock' => Moves::Spock.new, 'scissors' => Moves::Scissors.new,
+             'lizard' => Moves::Lizard.new }
 
   attr_accessor :move, :name, :moves
 
