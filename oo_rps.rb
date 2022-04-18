@@ -147,6 +147,8 @@ class Player
   VALUES = { 'rock' => Moves::Rock.new, 'paper' => Moves::Paper.new,
              'spock' => Moves::Spock.new, 'scissors' => Moves::Scissors.new,
              'lizard' => Moves::Lizard.new }
+  CHOICES = { 'r' => 'rock', 'p' => 'paper', 'sp' => 'spock',
+              's' => 'scissors', 'l' => 'lizard' }
 
   attr_accessor :move, :name, :moves
 
@@ -172,8 +174,8 @@ class Human < Player
   def choose
     choice = nil
     loop do
-      puts "Please choose rock, paper, scissors, lizard, or spock:".yellow
-      choice = gets.chomp
+      puts "Choose (r)ock, (p)aper, (s)cissors, (l)izard, or (sp)ock:".yellow
+      choice = CHOICES[gets.chomp.strip]
       break if VALUES.keys.include?(choice)
       puts "Sorry, invalid choice."
     end
