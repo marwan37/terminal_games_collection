@@ -77,7 +77,7 @@ end
 
 module Moves
   class Move
-    attr_accessor :wins_against, :move
+    attr_reader :wins_against, :move
 
     def >(other)
       @wins_against.include?(other.move)
@@ -91,10 +91,6 @@ module Moves
       @wins_against.each_with_index do |move, i|
         return @style[i] if other.move == move
       end
-    end
-
-    def beats
-      @wins_against
     end
 
     def phrase(other)
