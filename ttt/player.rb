@@ -9,7 +9,7 @@ PLAYER
 
 class Player
   attr_accessor :marker
-  attr_reader :board_size
+  attr_reader :board_size, :name
 
   X_MARKER_9 = "Ｘ".red
   O_MARKER_9 = "〇".blue
@@ -28,12 +28,23 @@ class Player
 end
 
 class Human < Player
-  def initialize(board_size)
+  def initialize(board_size, name=nil)
     super(board_size)
     @marker = set_marker
+    @name = !name ? set_name : name
   end
 
   private
+
+  def set_name
+    puts ""
+    loop do
+      puts "What's your name?"
+      entry = gets.chomp
+      return entry unless entry.empty?
+      puts "Sorry, must enter a value."
+    end
+  end
 
   def set_marker
     marker = nil
@@ -60,5 +71,10 @@ class Computer < Player
   def initialize(board_size, computer_marker)
     super(board_size)
     @marker = computer_marker
+    @name = set_name
+  end
+
+  def set_name
+    @name = ['DiligentComputer', 'C3PO', 'Discovery', 'Megabyte'].sample
   end
 end

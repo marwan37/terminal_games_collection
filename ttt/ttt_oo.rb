@@ -28,6 +28,7 @@ class TTTGame
     @human = Human.new(board.size)
     @computer = Computer.new(board.size, set_computer_marker)
     @current_marker = (board.size == 9 ? FIRST_TO_MOVE_9 : FIRST_TO_MOVE)
+    display_names
     @@outcomes = []
   end
 
@@ -90,10 +91,10 @@ class TTTGame
   def winning_score_reached?
     if @@outcomes.count('human') == 3
       puts ""
-      animate_title("Congrats you reached 5 wins!".green)
+      animate_title("Congrats #{human.name}, you've reached 5 wins!".green)
     elsif @@outcomes.count('computer') == 3
       puts ""
-      animate_title("Computer reached 5 wins! Better luck next time...".red)
+      animate_title("#{computer.name} has 5 wins. Better luck next time...".red)
     end
     @@outcomes.count('human') == 3 || @@outcomes.count('computer') == 3
   end
@@ -133,8 +134,8 @@ class TTTGame
 
   def display_result
     case board.winning_marker
-    when human.marker    then update_outcome('You won!'.green)
-    when computer.marker then update_outcome('Computer won!'.red)
+    when human.marker    then update_outcome("#{human.name} won!".green)
+    when computer.marker then update_outcome("#{computer.name} won!".red)
     else                      update_outcome("It's a tie!".yellow)
     end
   end
@@ -142,8 +143,8 @@ class TTTGame
   def update_outcome(result)
     animate_title(result)
     case result
-    when 'You won!'.green    then @@outcomes << 'human'
-    when 'Computer won!'.red then @@outcomes << 'computer'
+    when "#{human.name} won!".green   then @@outcomes << 'human'
+    when "#{computer.name} won!".red  then @@outcomes << 'computer'
     end
     display_score
   end
@@ -152,12 +153,13 @@ class TTTGame
     puts ""
     human_score = @@outcomes.count('human')
     computer_score = @@outcomes.count('computer')
-    puts "Human: #{human_score} - Computer: #{computer_score}".magenta
+    str = "#{human.name}: #{human_score}, #{computer.name}: #{computer_score}"
+    puts str.magenta
   end
 
   def display_board
     markers = [human.marker.strip, computer.marker.strip]
-    puts "You're a #{markers[0]}. Computer is a #{markers[1]}."
+    puts "#{human.name} is #{markers[0]}. #{computer.name} is a #{markers[1]}."
     puts ""
     board.draw
     puts ""
@@ -185,7 +187,7 @@ class TTTGame
 
   def new_board_settings
     board.change_size_and_reset
-    @human = Human.new(board.size)
+    @human = Human.new(board.size, human.name)
     @computer = Computer.new(board.size, set_computer_marker)
   end
 end

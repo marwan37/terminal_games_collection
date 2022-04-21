@@ -24,6 +24,15 @@ module Displayable
     numbers.light_black
   end
 
+  def display_names
+    puts ""
+    animate_name("#{human.marker.strip} Human: " + "#{human.name}!")
+    puts ""
+    animate_name("#{computer.marker.strip} Computer: " + "#{computer.name}!")
+    puts ""
+    display_continue_message
+  end
+
   def clear_screen_and_display_board
     clear
     display_board
@@ -68,6 +77,13 @@ module Displayable
     animate_title("Let's play again!".yellow)
     puts ""
     sleep 0.5
+  end
+
+  def animate_name(title)
+    title.each_char do |letter|
+      print letter
+      sleep(0.03)
+    end
   end
 
   def animate_title(title)
