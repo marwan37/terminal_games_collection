@@ -28,7 +28,7 @@ class TTTGame
     @human = Human.new(board.size)
     @computer = Computer.new(board.size, set_computer_marker)
     @current_marker = (board.size == 9 ? FIRST_TO_MOVE_9 : FIRST_TO_MOVE)
-    display_names
+    display_names_and_rules
     @@outcomes = []
   end
 
@@ -78,6 +78,14 @@ class TTTGame
       puts "=> Sorry, must type (y) or (n)"
     end
     return change_board_size? if answer.downcase == 'y'
+  end
+
+  def display_score
+    puts ""
+    human_score = @@outcomes.count('human')
+    computer_score = @@outcomes.count('computer')
+    str = "#{human.name}: #{human_score}, #{computer.name}: #{computer_score}"
+    puts str.magenta
   end
 
   # switches markers automatically after each round
@@ -132,13 +140,6 @@ class TTTGame
     @current_marker == human.marker
   end
 
-  def display_result
-    case board.winning_marker
-    when human.marker    then update_outcome("#{human.name} won!".green)
-    when computer.marker then update_outcome("#{computer.name} won!".red)
-    else                      update_outcome("It's a tie!".yellow)
-    end
-  end
 
   def update_outcome(result)
     animate_title(result)
@@ -147,22 +148,6 @@ class TTTGame
     when "#{computer.name} won!".red  then @@outcomes << 'computer'
     end
     display_score
-  end
-
-  def display_score
-    puts ""
-    human_score = @@outcomes.count('human')
-    computer_score = @@outcomes.count('computer')
-    str = "#{human.name}: #{human_score}, #{computer.name}: #{computer_score}"
-    puts str.magenta
-  end
-
-  def display_board
-    markers = [human.marker.strip, computer.marker.strip]
-    puts "#{human.name} is #{markers[0]}. #{computer.name} is a #{markers[1]}."
-    puts ""
-    board.draw
-    puts ""
   end
 
   def reset

@@ -16,6 +16,8 @@ module Displayable
     end
   end
 
+  # ***************  UNMARKED ARRAY NUMBERS ***************
+
   def joinor(board, delimiter = ', ', word = ' or ')
     numbers = board.unmarked_keys
     word = (numbers.size == 1 ? '' : word)
@@ -24,7 +26,15 @@ module Displayable
     numbers.light_black
   end
 
-  def display_names
+  # *************** DISPLAY GENERAL MESSAGES ***************
+
+  def display_welcome_message
+    clear
+    animate_title("Welcome to Tic Tac Toe!")
+    puts ""
+  end
+
+  def display_names_and_rules
     puts ""
     animate_name("#{human.marker.strip} Human: " + "#{human.name}!")
     puts ""
@@ -34,9 +44,9 @@ module Displayable
     display_continue_message
   end
 
-  def clear_screen_and_display_board
-    clear
-    display_board
+  def display_game_score_limit
+    puts ""
+    animate_title("First to " + "5".green + " wins.")
   end
 
   def display_continue_message
@@ -45,10 +55,50 @@ module Displayable
     gets.chomp
   end
 
-  def switch_markers?
-    display_continue_message
-    answer = gets.chomp
-    answer.downcase.strip == 'o'
+
+  def display_play_again_message
+    animate_title("Let's play again!".yellow)
+    puts ""
+    sleep 0.5
+  end
+
+  def display_goodbye_message
+    puts ""
+    puts "Thanks for playing Tic Tac Toe! Goodbye!"
+  end
+
+  # *************** DISPLAY SCORE AND GAME RESULT ***************
+
+  def display_score
+    puts ""
+    human_score = @@outcomes.count('human')
+    computer_score = @@outcomes.count('computer')
+    str = "#{human.name}: #{human_score}, #{computer.name}: #{computer_score}"
+    puts str.magenta
+  end
+
+
+  def display_result
+    case board.winning_marker
+    when human.marker    then update_outcome("#{human.name} won!".green)
+    when computer.marker then update_outcome("#{computer.name} won!".red)
+    else                      update_outcome("It's a tie!".yellow)
+    end
+  end
+
+  # *************** DISPLAY BOARD AND CLEAR  ***************
+
+  def display_board
+    markers = [human.marker.strip, computer.marker.strip]
+    puts "#{human.name} is #{markers[0]}. #{computer.name} is a #{markers[1]}."
+    puts ""
+    board.draw
+    puts ""
+  end
+
+  def clear_screen_and_display_board
+    clear
+    display_board
   end
 
   def user_wants_to_change_board_size?
@@ -63,27 +113,8 @@ module Displayable
     answer.downcase.strip == 'y'
   end
 
-  def display_welcome_message
-    clear
-    animate_title("Welcome to Tic Tac Toe!")
-    puts ""
-  end
 
-  def display_game_score_limit
-    puts ""
-    animate_title("First to " + "5".green + " wins.")
-  end
-
-  def display_goodbye_message
-    puts ""
-    puts "Thanks for playing Tic Tac Toe! Goodbye!"
-  end
-
-  def display_play_again_message
-    animate_title("Let's play again!".yellow)
-    puts ""
-    sleep 0.5
-  end
+ # *************** ANIMATE STRING AND NAME ***************
 
   def animate_name(title)
     title.each_char do |letter|
