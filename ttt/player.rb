@@ -4,6 +4,7 @@ require 'modules/artificial_intelligence'
 require 'rainbow'
 require 'rainbow/refinement'
 using Rainbow
+
 =begin
 PLAYER
   -includes ArtificialIntelligence module (used by computer only)
@@ -35,9 +36,7 @@ class Human < Player
   def initialize(board_size, name=nil)
     super(board_size)
     @marker = set_marker
-    @marker = X_MARKER
     @name = !name ? set_name : name
-    # @name = 'Marwan'
   end
 
   private
