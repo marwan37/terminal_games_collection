@@ -1,6 +1,7 @@
-## DILIGENT COMPUTER module included in PLAYER Class only
+## COMPUTER HAS ARTIFICIAL INTELLIGENCE: in Player/Computer Class only
 # computer methods: median(board) for first move, can_win?, should_defend?
-module DiligentComputer
+
+module ArtificialIntelligence
   def can_win?(board)
     computer_squares = board.get_marked_squares(@marker)
     board.game_rules.winning_lines.each do |line|

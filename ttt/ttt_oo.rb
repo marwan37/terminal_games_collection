@@ -6,13 +6,15 @@ require "square"
 
 # GEMS
 require 'terminal-table'
-require 'colorize'
+require 'rainbow'
+require 'rainbow/refinement'
+using Rainbow
 
 =begin
 MAIN GAME CLASS
   modules: Displayable (for displaying various messages and joinor method)
-  instance_variables: @current_marker, @board, @human, @computer
-  public_methods: play
+  FIRST_TO_MOVE_9
+    -only used if user picks 9x9 board
 =end
 class TTTGame
   include Displayable
@@ -58,6 +60,8 @@ class TTTGame
     human.marker == Player::X_MARKER_9 ? Player::O_MARKER_9 : Player::X_MARKER_9
   end
 
+  # **************** GAME LOOP METHODS ****************
+
   def play_one_round
     clear_screen_and_display_board
     loop do
@@ -71,40 +75,13 @@ class TTTGame
   def play_again?
     answer = nil
     puts ""
-    puts "=> Play again? (y/n)".yellow
+    puts Rainbow("=> Play again? (y/n)").palegoldenrod
     loop do
       answer = gets.chomp.strip
       break if %w(y n).include?(answer)
       puts "=> Sorry, must type (y) or (n)"
     end
     return change_board_size? if answer.downcase == 'y'
-  end
-
-  def display_score
-    puts ""
-    human_score = @@outcomes.count('human')
-    computer_score = @@outcomes.count('computer')
-    str = "#{human.name}: #{human_score}, #{computer.name}: #{computer_score}"
-    puts str.magenta
-  end
-
-  # switches markers automatically after each round
-  def continue_and_switch_markers
-    display_continue_message
-    human.marker = human.switch_markers
-    computer.marker = computer.switch_markers
-    reset
-  end
-
-  def winning_score_reached?
-    if @@outcomes.count('human') == 3
-      puts ""
-      animate_title("Congrats #{human.name}, you've reached 5 wins!".green)
-    elsif @@outcomes.count('computer') == 3
-      puts ""
-      animate_title("#{computer.name} has 5 wins. Better luck next time...".red)
-    end
-    @@outcomes.count('human') == 3 || @@outcomes.count('computer') == 3
   end
 
   def human_moves
@@ -140,6 +117,34 @@ class TTTGame
     @current_marker == human.marker
   end
 
+  # switches markers automatically after each round
+  def continue_and_switch_markers
+    display_continue_message
+    human.marker = human.switch_markers
+    computer.marker = computer.switch_markers
+    reset
+  end
+
+  # **************** SCORE CHECK AND OUTCOME DISPLAY METHODS ****************
+
+  def display_score
+    puts ""
+    human_score = @@outcomes.count('human')
+    computer_score = @@outcomes.count('computer')
+    str = "#{human.name}: #{human_score}, #{computer.name}: #{computer_score}"
+    puts str.magenta
+  end
+
+  def winning_score_reached?
+    if @@outcomes.count('human') == 3
+      puts ""
+      animate_title("Congrats #{human.name}, you've reached 3 wins!".green)
+    elsif @@outcomes.count('computer') == 3
+      puts ""
+      animate_title("#{computer.name} has 3 wins. Better luck next time...".red)
+    end
+    @@outcomes.count('human') == 3 || @@outcomes.count('computer') == 3
+  end
 
   def update_outcome(result)
     animate_title(result)
@@ -149,6 +154,8 @@ class TTTGame
     end
     display_score
   end
+
+  # **************** BOARD RESET AND SIZE CHANGE METHODS ****************
 
   def reset
     board.reset
@@ -165,7 +172,7 @@ class TTTGame
   end
 
   def change_board_size?
-    return new_board_settings if user_wants_to_change_board_size?
+    return new_board_settings if display_user_board_size_change?
     board.reset
     @current_marker = (board.size == 9 ? FIRST_TO_MOVE_9 : FIRST_TO_MOVE)
   end

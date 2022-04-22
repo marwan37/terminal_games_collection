@@ -1,4 +1,6 @@
-require 'colorize'
+require 'rainbow'
+require 'rainbow/refinement'
+using Rainbow
 
 =begin DISPLAYABLE
   module included in BOARD and TTTGame classes
@@ -23,7 +25,7 @@ module Displayable
     word = (numbers.size == 1 ? '' : word)
     array = numbers[-numbers.size..-2]
     numbers = "#{array.join(delimiter)}#{word}#{numbers.last}"
-    numbers.light_black
+    Rainbow(numbers).dimgray
   end
 
   # *************** DISPLAY GENERAL MESSAGES ***************
@@ -35,9 +37,7 @@ module Displayable
   end
 
   def display_names_and_rules
-    puts ""
     animate_name("#{human.marker.strip} Human: " + "#{human.name}!")
-    puts ""
     animate_name("#{computer.marker.strip} Computer: " + "#{computer.name}!")
     puts ""
     display_game_score_limit
@@ -46,18 +46,17 @@ module Displayable
 
   def display_game_score_limit
     puts ""
-    animate_title("First to " + "5".green + " wins.")
+    animate_title("First to " + "3".green + " wins.")
   end
 
   def display_continue_message
     puts ""
-    puts "=> Press any key to continue...".cyan
+    puts Rainbow("=> Press any key to continue...").cornsilk
     gets.chomp
   end
 
-
   def display_play_again_message
-    animate_title("Let's play again!".yellow)
+    animate_title(Rainbow("Let's play again!").palegoldenrod)
     puts ""
     sleep 0.5
   end
@@ -68,15 +67,6 @@ module Displayable
   end
 
   # *************** DISPLAY SCORE AND GAME RESULT ***************
-
-  def display_score
-    puts ""
-    human_score = @@outcomes.count('human')
-    computer_score = @@outcomes.count('computer')
-    str = "#{human.name}: #{human_score}, #{computer.name}: #{computer_score}"
-    puts str.magenta
-  end
-
 
   def display_result
     case board.winning_marker
@@ -101,9 +91,9 @@ module Displayable
     display_board
   end
 
-  def user_wants_to_change_board_size?
+  def display_user_board_size_change?
     puts ""
-    puts "=> Would you like to change the board size? (y/n)".yellow
+    puts Rainbow("=> Change board size? (y/n)").palegoldenrod
     answer = nil
     loop do
       answer = gets.chomp
@@ -113,10 +103,10 @@ module Displayable
     answer.downcase.strip == 'y'
   end
 
-
- # *************** ANIMATE STRING AND NAME ***************
+  # *************** ANIMATE STRING AND NAME ***************
 
   def animate_name(title)
+    puts ""
     title.each_char do |letter|
       print letter
       sleep(0.03)

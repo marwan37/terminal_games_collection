@@ -33,8 +33,8 @@ class Square
   private
 
   def colored_sq(size)
-    return @@square_count.to_s.light_black if size > 5
-    colored = @@square_count.to_s.light_black
+    colored = Rainbow(@@square_count.to_s).dimgray
+    return colored if size > 5
     return " \n " + colored + " \n " if @@square_count > 9
     " \n #{colored}  \n "
   end

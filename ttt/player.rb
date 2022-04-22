@@ -1,21 +1,25 @@
 $LOAD_PATH.unshift(__dir__)
-require 'modules/diligent_computer'
+require 'modules/artificial_intelligence'
+
+require 'rainbow'
+require 'rainbow/refinement'
+using Rainbow
 =begin
 PLAYER
-  -includes DiligentComputer module (used by computer only)
+  -includes ArtificialIntelligence module (used by computer only)
   -X_MARKER_9 and O_MARKER_9
-    used if user selects 9x9 board, otherwise could overwhelm terminal display
+    -used if user selects 9x9 board, otherwise could overwhelm terminal display
 =end
 
 class Player
   attr_accessor :marker
   attr_reader :board_size, :name
 
-  X_MARKER_9 = "Ｘ".red
-  O_MARKER_9 = "〇".blue
+  X_MARKER_9 = Rainbow("Ｘ").crimson.bright
+  O_MARKER_9 = Rainbow('〇').dodgerblue.bright
 
-  X_MARKER = "\n " + "Ｘ".red + " \n "
-  O_MARKER = "\n " + "〇".blue + " \n "
+  X_MARKER = "\n " + X_MARKER_9 + " \n "
+  O_MARKER = "\n " + O_MARKER_9 + " \n "
 
   def initialize(board_size)
     @board_size = board_size
@@ -31,7 +35,9 @@ class Human < Player
   def initialize(board_size, name=nil)
     super(board_size)
     @marker = set_marker
+    @marker = X_MARKER
     @name = !name ? set_name : name
+    # @name = 'Marwan'
   end
 
   private
@@ -39,7 +45,7 @@ class Human < Player
   def set_name
     puts ""
     loop do
-      puts "What's your name?"
+      puts "=> What's your name?"
       entry = gets.chomp
       return entry unless entry.empty?
       puts "Sorry, must enter a value."
@@ -66,7 +72,7 @@ class Human < Player
 end
 
 class Computer < Player
-  include DiligentComputer
+  include ArtificialIntelligence
 
   def initialize(board_size, computer_marker)
     super(board_size)
@@ -75,6 +81,6 @@ class Computer < Player
   end
 
   def set_name
-    @name = ['DiligentComputer', 'C3PO', 'Discovery', 'Megabyte'].sample
+    @name = ['Marvin', 'C3PO', 'Discovery', 'Megabyte'].sample
   end
 end

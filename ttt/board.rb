@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift(__dir__)
 require 'game_rules'
-
+require 'rainbow/refinement'
+using Rainbow
 =begin
 BOARD
   -Generates Square instances and GameRules instance according to user choice
@@ -17,6 +18,7 @@ class Board
   def initialize
     @squares = {}
     @size = set_board_size
+    # @size = 3
     @game_rules = GameRules.new(@size)
     reset
   end
