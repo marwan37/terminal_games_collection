@@ -30,6 +30,7 @@ module Displayable
     puts ""
     animate_name("#{computer.marker.strip} Computer: " + "#{computer.name}!")
     puts ""
+    display_game_score_limit
     display_continue_message
   end
 
@@ -66,6 +67,11 @@ module Displayable
     clear
     animate_title("Welcome to Tic Tac Toe!")
     puts ""
+  end
+
+  def display_game_score_limit
+    puts ""
+    animate_title("First to " + "5".green + " wins.")
   end
 
   def display_goodbye_message
